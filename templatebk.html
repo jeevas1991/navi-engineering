@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Navi Engineers and Consultants</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:opsz,wght@14..32,400..600&display=swap" rel="stylesheet" />
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ----- RESET & BASE ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', 'Helvetica Neue', sans-serif;
+            background: #f7f5f2;
+            color: #1e1e1e;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        .heading-font {
+            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section-padding {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+        .section-title span {
+            color: #e07c3c;
+        }
+        .section-subtitle {
+            color: #5f5a52;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+
+        .btn-primary {
+            background: #e07c3c;
+            border: none;
+            padding: 14px 38px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #1b1b1b;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 8px 24px rgba(224, 124, 60, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .btn-primary:hover {
+            background: #f08f4a;
+            transform: translateY(-3px);
+            box-shadow: 0 14px 32px rgba(224, 124, 60, 0.35);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #e07c3c;
+            padding: 12px 34px;
+            border-radius: 60px;
+            font-weight: 600;
+            color: #e07c3c;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        .btn-outline:hover {
+            background: #e07c3c;
+            color: #1b1b1b;
+        }
+
+        /* ----- STICKY NAV ----- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(30, 30, 30, 0.95);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 12px 0;
+            transition: background 0.3s;
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .logo {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 800;
+            font-size: 1.4rem;
+            letter-spacing: -0.03em;
+            color: #f0ede8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        .logo i {
+            color: #e07c3c;
+            font-size: 1.6rem;
+        }
+        .logo span {
+            font-weight: 400;
+            font-size: 0.7rem;
+            color: #bdb8ae;
+            display: block;
+            letter-spacing: 0.3px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #d6d2cb;
+            align-items: center;
+        }
+        .nav-links a {
+            color: #d6d2cb;
+            text-decoration: none;
+            transition: color 0.2s;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 4px;
+        }
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #ffffff;
+            border-bottom-color: #e07c3c;
+        }
+
+        .cta-nav {
+            background: #e07c3c;
+            color: #1e1e1e !important;
+            padding: 8px 22px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            border: none;
+            border-bottom: 0 !important;
+        }
+        .cta-nav:hover {
+            background: #f08f4a;
+            color: #0c0c0c !important;
+            transform: scale(1.02);
+        }
+
+        .nav-toggle {
+            display: none;
+            font-size: 1.8rem;
+            color: #d6d2cb;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* ===== HERO SLIDER ===== */
+        .hero-slider {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            min-height: 600px;
+            overflow: hidden;
+            background: #1a1a1a;
+            margin-top: 0;
+        }
+
+        .slider-track {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform;
+        }
+
+        .slide {
+            flex: 0 0 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 0 8%;
+        }
+
+        .slide::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.75) 0%, rgba(10, 10, 10, 0.25) 70%);
+            z-index: 1;
+        }
+
+        .slide-content {
+            position: relative;
+            z-index: 2;
+            max-width: 680px;
+            color: #fff;
+            animation: fadeUp 0.9s ease forwards;
+        }
+
+        .slide-content h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.05;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+        .slide-content h1 span {
+            color: #e07c3c;
+            border-bottom: 4px solid #e07c3c;
+            padding-bottom: 2px;
+        }
+        .slide-content p {
+            font-size: 1.2rem;
+            color: #e0dbd2;
+            max-width: 480px;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .hero-buttons .btn-whatsapp {
+            background: #25D366;
+            color: #fff;
+            padding: 14px 32px;
+            border-radius: 60px;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.2s;
+        }
+        .hero-buttons .btn-whatsapp:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
+        }
+
+        .hero-buttons .btn-call {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 14px 32px;
+            border-radius: 60px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.2s;
+        }
+        .hero-buttons .btn-call:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes fadeUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slider-controls {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            display: flex;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .slider-dots {
+            display: flex;
+            gap: 12px;
+        }
+        .dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 40px;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            padding: 0;
+        }
+        .dot.active {
+            background: #e07c3c;
+            width: 38px;
+        }
+
+        .slider-arrow {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #fff;
+            width: 48px;
+            height: 48px;
+            border-radius: 40px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .slider-arrow:hover {
+            background: rgba(224, 124, 60, 0.3);
+            border-color: #e07c3c;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 15;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            animation: bounceDown 2s infinite;
+        }
+        .scroll-indicator i {
+            font-size: 1.2rem;
+        }
+
+        @keyframes bounceDown {
+            0%,
+            100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            50% {
+                transform: translateX(-50%) translateY(8px);
+            }
+        }
+
+        /* ===== SCROLL ANIMATIONS ===== */
+        .scroll-slide {
+            opacity: 0;
+            transition: all 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform, opacity;
+        }
+
+        .scroll-slide.slide-left {
+            transform: translateX(-80px);
+        }
+        .scroll-slide.slide-right {
+            transform: translateX(80px);
+        }
+        .scroll-slide.slide-top {
+            transform: translateY(-80px);
+        }
+        .scroll-slide.slide-bottom {
+            transform: translateY(80px);
+        }
+
+        .scroll-slide.visible {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+
+        /* ===== STATS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            background: #1e1e1e;
+            padding: 50px 40px;
+            border-radius: 40px;
+            color: #f0ede8;
+            margin-top: 20px;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #e07c3c;
+            letter-spacing: -0.02em;
+        }
+        .stat-label {
+            color: #bdb8ae;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        /* ===== CARDS ===== */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 32px 24px;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.03);
+            border: 1px solid #ece8e2;
+            transition: 0.25s ease;
+        }
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.07);
+            border-color: #d6cec4;
+        }
+        .card-icon {
+            font-size: 2.6rem;
+            color: #e07c3c;
+            margin-bottom: 16px;
+        }
+        .card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+        .card p {
+            color: #4e4a44;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .service-card .card-img {
+            width: 100%;
+            height: 180px;
+            border-radius: 16px;
+            object-fit: cover;
+            margin-bottom: 16px;
+            background: #d6cec4;
+        }
+
+        /* ===== PROJECT CARDS ===== */
+        .project-card {
+            border-radius: 28px;
+            overflow: hidden;
+            background: #fff;
+            border: 1px solid #e4ddd4;
+            transition: 0.2s;
+        }
+        .project-card:hover {
+            box-shadow: 0 20px 32px -12px rgba(0, 0, 0, 0.08);
+            transform: translateY(-4px);
+        }
+        .project-img {
+            height: 240px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .project-img .project-tag {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: #e07c3c;
+            color: #1b1b1b;
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+        .project-info {
+            padding: 24px;
+        }
+        .project-info h4 {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+        .project-info .project-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 0.85rem;
+            color: #5f5a52;
+            margin: 8px 0 12px;
+        }
+        .project-info .project-meta i {
+            color: #e07c3c;
+            width: 18px;
+        }
+        .project-info p {
+            color: #4e4a44;
+            font-size: 0.95rem;
+        }
+
+        /* ===== PROCESS STEPS ===== */
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .process-step {
+            background: #fff;
+            border-radius: 24px;
+            padding: 24px 20px;
+            border-top: 6px solid #e07c3c;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            text-align: center;
+        }
+        .process-step .step-num {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #d6cec4;
+            margin-bottom: 4px;
+        }
+        .process-step h4 {
+            font-size: 1.1rem;
+        }
+        .process-step p {
+            color: #4e4a44;
+            font-size: 0.9rem;
+        }
+
+        /* ===== TESTIMONIALS ===== */
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        .testimonial {
+            background: #fff;
+            border-radius: 28px;
+            padding: 28px 24px;
+            border: 1px solid #ece8e2;
+        }
+        .testimonial i {
+            color: #e07c3c;
+            font-size: 1.6rem;
+            opacity: 0.3;
+            margin-bottom: 12px;
+        }
+        .testimonial .author {
+            margin-top: 18px;
+            font-weight: 600;
+            border-top: 1px solid #ece8e2;
+            padding-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .author-avatar {
+            width: 44px;
+            height: 44px;
+            background: #d6cec4;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #1e1e1e;
+        }
+
+        /* ===== CTA SECTION ===== */
+        .cta-section {
+            background: #1a1a1a;
+            border-radius: 40px;
+            padding: 60px 50px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        .cta-section h2 {
+            color: #f0ede8;
+            font-size: 2.2rem;
+            max-width: 500px;
+        }
+        .cta-section h2 span {
+            color: #e07c3c;
+        }
+
+        /* ===== CONTACT PAGE ===== */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            background: #fff;
+            padding: 40px;
+            border-radius: 40px;
+            border: 1px solid #e4ddd4;
+        }
+
+        .contact-info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .contact-info-item i {
+            color: #e07c3c;
+            font-size: 1.3rem;
+            width: 28px;
+            margin-top: 4px;
+        }
+        .contact-info-item h4 {
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+        .contact-info-item p {
+            color: #4e4a44;
+        }
+
+        .contact-form input,
+        .contact-form textarea,
+        .contact-form select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid #e4ddd4;
+            border-radius: 16px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            background: #f7f5f2;
+            transition: 0.2s;
+            margin-bottom: 16px;
+        }
+        .contact-form input:focus,
+        .contact-form textarea:focus,
+        .contact-form select:focus {
+            outline: none;
+            border-color: #e07c3c;
+            box-shadow: 0 0 0 4px rgba(224, 124, 60, 0.1);
+        }
+        .contact-form textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        .contact-form .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* ===== QUOTE FORM ===== */
+        .quote-form {
+            background: #fff;
+            border-radius: 40px;
+            padding: 50px;
+            border: 1px solid #e4ddd4;
+        }
+        .quote-form .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .quote-form input,
+        .quote-form textarea,
+        .quote-form select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid #e4ddd4;
+            border-radius: 16px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            background: #f7f5f2;
+            transition: 0.2s;
+            margin-bottom: 16px;
+        }
+        .quote-form input:focus,
+        .quote-form textarea:focus,
+        .quote-form select:focus {
+            outline: none;
+            border-color: #e07c3c;
+            box-shadow: 0 0 0 4px rgba(224, 124, 60, 0.1);
+        }
+        .quote-form textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        .quote-form .file-upload {
+            border: 2px dashed #d6cec4;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            color: #5f5a52;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .quote-form .file-upload:hover {
+            border-color: #e07c3c;
+            background: #f7f5f2;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            padding: 40px 0 24px;
+            border-top: 1px solid #ddd6cc;
+            color: #4e4a44;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+
+        /* ===== PAGE HEADER ===== */
+        .page-header {
+            background: #1a1a1a;
+            padding: 120px 0 60px;
+            color: #f0ede8;
+            margin-top: 0;
+        }
+        .page-header h1 {
+            font-size: 3rem;
+            margin-bottom: 8px;
+        }
+        .page-header p {
+            color: #bdb8ae;
+            font-size: 1.1rem;
+            max-width: 600px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .grid-3 {
+                grid-template-columns: 1fr 1fr;
+            }
+            .process-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .testimonial-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .slide-content h1 {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                padding-top: 18px;
+                gap: 16px;
+            }
+            .nav-links.open {
+                display: flex;
+            }
+            .nav-toggle {
+                display: block;
+            }
+            .grid-3,
+            .grid-2,
+            .testimonial-grid {
+                grid-template-columns: 1fr;
+            }
+            .process-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 30px;
+            }
+            .contact-grid {
+                grid-template-columns: 1fr;
+                padding: 24px;
+            }
+            .quote-form {
+                padding: 24px;
+            }
+            .quote-form .form-row {
+                grid-template-columns: 1fr;
+            }
+            .contact-form .form-row {
+                grid-template-columns: 1fr;
+            }
+            .cta-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 24px;
+                padding: 40px 24px;
+            }
+            .slide-content h1 {
+                font-size: 2.4rem;
+            }
+            .hero-slider {
+                height: 100vh;
+                min-height: 500px;
+            }
+            .slider-arrow {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            .logo {
+                font-size: 1.2rem;
+            }
+            .logo span {
+                font-size: 0.6rem;
+            }
+            .scroll-indicator {
+                bottom: 80px;
+            }
+            .page-header h1 {
+                font-size: 2.2rem;
+            }
+            .page-header {
+                padding: 100px 0 40px;
+            }
+            .hero-buttons .btn-whatsapp,
+            .hero-buttons .btn-call {
+                padding: 12px 24px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .slide-content h1 {
+                font-size: 2rem;
+            }
+            .cta-section h2 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== NAVIGATION ===== -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-hard-hat"></i>
+                <div>
+                    NAVI
+                    <span>Engineers &amp; Consultants</span>
+                </div>
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html" class="active">Home</a>
+                <a href="#services">Services</a>
+                <a href="#projects">Projects</a>
+                <a href="#about">About</a>
+                <a href="#process">Process</a>
+                <a href="#contact">Contact</a>
+                <a href="#quote" class="cta-nav"><i class="fas fa-file-signature"></i> Get a Quote</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== HERO SLIDER ===== -->
+    <div class="hero-slider" id="heroSlider">
+        <div class="slider-track" id="sliderTrack">
+            <!-- Slide 1 -->
+            <div class="slide" style="background-image: linear-gradient(135deg, rgba(30,30,30,0.3) 0%, rgba(10,10,10,0.5) 100%), url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80');">
+                <div class="slide-content">
+                    <h1>Engineering <span>excellence</span> for your dream home</h1>
+                    <p>Navi Engineers &amp; Consultants — full-spectrum home construction, structural design, and interior solutions with integrity.</p>
+                    <div class="hero-buttons">
+                        <a href="#quote" class="btn-primary"><i class="fas fa-arrow-right"></i> Get a Quote</a>
+                        <a href="https://wa.me/919876543210" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                        <a href="tel:+919876543210" class="btn-call"><i class="fas fa-phone"></i> Call Now</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Slide 2 -->
+            <div class="slide" style="background-image: linear-gradient(135deg, rgba(30,30,30,0.3) 0%, rgba(10,10,10,0.5) 100%), url('https://images.unsplash.com/photo-1618220179428-22790b461013?w=1600&q=80');">
+                <div class="slide-content">
+                    <h1>Interior <span>design</span> &amp; structural integrity</h1>
+                    <p>Where aesthetics meet engineering precision. Our team delivers timeless interiors backed by sound structural planning.</p>
+                    <div class="hero-buttons">
+                        <a href="#quote" class="btn-primary"><i class="fas fa-arrow-right"></i> Get a Quote</a>
+                        <a href="https://wa.me/919876543210" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                        <a href="tel:+919876543210" class="btn-call"><i class="fas fa-phone"></i> Call Now</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Slide 3 -->
+            <div class="slide" style="background-image: linear-gradient(135deg, rgba(30,30,30,0.3) 0%, rgba(10,10,10,0.5) 100%), url('https://images.unsplash.com/photo-1511818966892-d7d671e672a2?w=1600&q=80');">
+                <div class="slide-content">
+                    <h1>Trusted <span>consultants</span> since 2012</h1>
+                    <p>Over a decade of delivering homes and commercial spaces that stand the test of time. Transparency, safety, and quality.</p>
+                    <div class="hero-buttons">
+                        <a href="#quote" class="btn-primary"><i class="fas fa-arrow-right"></i> Get a Quote</a>
+                        <a href="https://wa.me/919876543210" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                        <a href="tel:+919876543210" class="btn-call"><i class="fas fa-phone"></i> Call Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="scroll-indicator">
+            <span>Scroll</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+
+        <div class="slider-controls">
+            <button class="slider-arrow" id="prevSlide"><i class="fas fa-chevron-left"></i></button>
+            <div class="slider-dots" id="sliderDots">
+                <button class="dot active" data-index="0"></button>
+                <button class="dot" data-index="1"></button>
+                <button class="dot" data-index="2"></button>
+            </div>
+            <button class="slider-arrow" id="nextSlide"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <!-- ===== STATS ===== -->
+    <section class="container section-padding" style="padding-top: 40px;">
+        <div class="stats-grid">
+            <div class="stat-item scroll-slide slide-top">
+                <div class="stat-number">12+</div>
+                <div class="stat-label">Years of Experience</div>
+            </div>
+            <div class="stat-item scroll-slide slide-bottom">
+                <div class="stat-number">150+</div>
+                <div class="stat-label">Projects Completed</div>
+            </div>
+            <div class="stat-item scroll-slide slide-top">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">Client Satisfaction</div>
+            </div>
+            <div class="stat-item scroll-slide slide-bottom">
+                <div class="stat-number">25+</div>
+                <div class="stat-label">Expert Team Members</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ABOUT INTRO ===== -->
+    <section id="about" class="container section-padding" style="padding-top: 20px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;">
+            <div class="scroll-slide slide-left">
+                <h2 class="section-title" style="margin-bottom: 8px;">About <span>Navi</span></h2>
+                <p style="color: #4e4a44; font-size: 1.05rem; line-height: 1.8;">Navi Engineers and Consultants is a premier firm offering integrated engineering, construction, and interior design services. We combine technical expertise with creative vision to deliver spaces that are safe, sustainable, and beautiful.</p>
+                <p style="color: #4e4a44; font-size: 1rem; line-height: 1.7; margin-top: 16px;">With over 12 years of experience, we have successfully delivered 150+ residential and commercial projects across the region. Our team of 25+ professionals ensures every project meets the highest standards of quality and safety.</p>
+                <div style="margin-top: 24px; display: flex; flex-wrap: wrap; gap: 30px;">
+                    <div><i class="fas fa-award" style="color:#e07c3c;"></i> <strong>Best Home Builder 2024</strong><br><span style="font-size:0.9rem; color:#5f5a52;">Industry recognition</span></div>
+                    <div><i class="fas fa-shield-alt" style="color:#e07c3c;"></i> <strong>Licensed &amp; Insured</strong><br><span style="font-size:0.9rem; color:#5f5a52;">Full coverage</span></div>
+                    <div><i class="fas fa-certificate" style="color:#e07c3c;"></i> <strong>ISO 9001 Certified</strong><br><span style="font-size:0.9rem; color:#5f5a52;">Quality management</span></div>
+                </div>
+            </div>
+            <div class="scroll-slide slide-right" style="background: #ece8e2; border-radius: 40px; padding: 40px; background-image: url('data:image/svg+xml;utf8,<svg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22><path d=%22M30 0L60 30L30 60L0 30L30 0z%22 fill=%22rgba(44,44,44,0.03)%22/></svg>');">
+                <i class="fas fa-quote-left" style="font-size:2.5rem; color:#e07c3c; opacity:0.3;"></i>
+                <p style="font-size:1.3rem; font-style:italic; color:#1e1e1e; margin-top:10px; line-height:1.6;">“They turned our house into a home we never want to leave. The attention to detail and quality of work is outstanding.”</p>
+                <p style="font-weight:600; margin-top:16px;">— Priya &amp; Anil Sharma, Homeowners</p>
+                <p style="color:#5f5a52; font-size:0.9rem;">Modern Farmhouse, Gurugram</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SERVICES ===== -->
+    <section id="services" class="container section-padding">
+        <h2 class="section-title scroll-slide slide-left">Our <span>Services</span></h2>
+        <p class="section-subtitle scroll-slide slide-right" style="transition-delay: 0.1s;">Comprehensive engineering, construction, and design solutions for residential and commercial projects.</p>
+        <div class="grid-3">
+            <div class="card service-card scroll-slide slide-left" style="transition-delay: 0.05s;">
+                <div class="card-icon"><i class="fas fa-drafting-compass"></i></div>
+                <h3>Architectural Design</h3>
+                <p>Creative and functional architectural planning, 3D visualization, and permit-ready drawings.</p>
+            </div>
+            <div class="card service-card scroll-slide slide-top" style="transition-delay: 0.1s;">
+                <div class="card-icon"><i class="fas fa-calculator"></i></div>
+                <h3>Structural Engineering</h3>
+                <p>Comprehensive structural analysis, foundation design, and seismic-resistant solutions.</p>
+            </div>
+            <div class="card service-card scroll-slide slide-right" style="transition-delay: 0.15s;">
+                <div class="card-icon"><i class="fas fa-home"></i></div>
+                <h3>Residential Construction</h3>
+                <p>End-to-end home building services with premium materials and quality craftsmanship.</p>
+            </div>
+            <div class="card service-card scroll-slide slide-left" style="transition-delay: 0.2s;">
+                <div class="card-icon"><i class="fas fa-building"></i></div>
+                <h3>Commercial Construction</h3>
+                <p>Office spaces, retail outlets, and commercial complexes built to industry standards.</p>
+            </div>
+            <div class="card service-card scroll-slide slide-bottom" style="transition-delay: 0.25s;">
+                <div class="card-icon"><i class="fas fa-tools"></i></div>
+                <h3>Renovation &amp; Remodeling</h3>
+                <p>Transform existing spaces with modern designs, structural upgrades, and premium finishes.</p>
+            </div>
+            <div class="card service-card scroll-slide slide-right" style="transition-delay: 0.3s;">
+                <div class="card-icon"><i class="fas fa-couch"></i></div>
+                <h3>Interior Design</h3>
+                <p>Space planning, material selection, custom furniture, and turnkey interior styling.</p>
+            </div>
+            <div class="card service-card scroll-slide slide-left" style="transition-delay: 0.35s;">
+                <div class="card-icon"><i class="fas fa-tasks"></i></div>
+                <h3>Project Management</h3>
+                <p>Full-cycle project coordination, scheduling, budget control, and quality assurance.</p>
+            </div>
+            <div class="card service-card scroll-slide slide-top" style="transition-delay: 0.4s;">
+                <div class="card-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+                <h3>Quantity Surveying &amp; Estimation</h3>
+                <p>Accurate cost estimation, BOQ preparation, and budget optimization for every project.</p>
+            </div>
+            <div class="card service-card scroll-slide slide-right" style="transition-delay: 0.45s;">
+                <div class="card-icon"><i class="fas fa-file-signature"></i></div>
+                <h3>Approval &amp; Permit Assistance</h3>
+                <p>Complete support for regulatory approvals, building permits, and compliance documentation.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FEATURED PROJECTS ===== -->
+    <section id="projects" class="container section-padding" style="padding-top: 0;">
+        <h2 class="section-title scroll-slide slide-right">Featured <span>Projects</span></h2>
+        <p class="section-subtitle scroll-slide slide-left" style="transition-delay: 0.1s;">Our portfolio showcases the quality, craftsmanship, and attention to detail that define our work.</p>
+        <div class="grid-2">
+            <div class="project-card scroll-slide slide-left" style="transition-delay: 0.1s;">
+                <div class="project-img" style="background-image: url('https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80');">
+                    <span class="project-tag">Residential</span>
+                </div>
+                <div class="project-info">
+                    <h4>Green Valley Farmhouse</h4>
+                    <div class="project-meta">
+                        <span><i class="fas fa-map-pin"></i> Gurugram, India</span>
+                        <span><i class="fas fa-ruler-combined"></i> 4,500 sq.ft</span>
+                        <span><i class="far fa-calendar-alt"></i> 2024</span>
+                    </div>
+                    <p>Luxurious 4-bedroom farmhouse with open concept design, timber accents, and energy-efficient systems. Completed in 8 months.</p>
+                    <a href="#" style="color:#e07c3c; font-weight:600; text-decoration:none;">View Details →</a>
+                </div>
+            </div>
+            <div class="project-card scroll-slide slide-right" style="transition-delay: 0.2s;">
+                <div class="project-img" style="background-image: url('https://images.unsplash.com/photo-1616137466211-f939a420be84?w=800&q=80');">
+                    <span class="project-tag">Interior Design</span>
+                </div>
+                <div class="project-info">
+                    <h4>Urban Loft Interior</h4>
+                    <div class="project-meta">
+                        <span><i class="fas fa-map-pin"></i> Mumbai, India</span>
+                        <span><i class="fas fa-ruler-combined"></i> 1,800 sq.ft</span>
+                        <span><i class="far fa-calendar-alt"></i> 2024</span>
+                    </div>
+                    <p>Full interior redesign with custom millwork, curated finishes, and smart lighting solutions for a contemporary urban home.</p>
+                    <a href="#" style="color:#e07c3c; font-weight:600; text-decoration:none;">View Details →</a>
+                </div>
+            </div>
+            <div class="project-card scroll-slide slide-left" style="transition-delay: 0.3s;">
+                <div class="project-img" style="background-image: url('https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=800&q=80');">
+                    <span class="project-tag">Commercial</span>
+                </div>
+                <div class="project-info">
+                    <h4>Tech Park Office Complex</h4>
+                    <div class="project-meta">
+                        <span><i class="fas fa-map-pin"></i> Bengaluru, India</span>
+                        <span><i class="fas fa-ruler-combined"></i> 25,000 sq.ft</span>
+                        <span><i class="far fa-calendar-alt"></i> 2023</span>
+                    </div>
+                    <p>Modern commercial office complex with sustainable design, open workspaces, and state-of-the-art infrastructure.</p>
+                    <a href="#" style="color:#e07c3c; font-weight:600; text-decoration:none;">View Details →</a>
+                </div>
+            </div>
+            <div class="project-card scroll-slide slide-right" style="transition-delay: 0.4s;">
+                <div class="project-img" style="background-image: url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80');">
+                    <span class="project-tag">Renovation</span>
+                </div>
+                <div class="project-info">
+                    <h4>Heritage Villa Restoration</h4>
+                    <div class="project-meta">
+                        <span><i class="fas fa-map-pin"></i> Jaipur, India</span>
+                        <span><i class="fas fa-ruler-combined"></i> 3,200 sq.ft</span>
+                        <span><i class="far fa-calendar-alt"></i> 2023</span>
+                    </div>
+                    <p>Complete restoration and modernization of a 100-year-old heritage villa while preserving its original character and charm.</p>
+                    <a href="#" style="color:#e07c3c; font-weight:600; text-decoration:none;">View Details →</a>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="#" class="btn-outline"><i class="fas fa-th-large"></i> View All Projects</a>
+        </div>
+    </section>
+
+    <!-- ===== PROCESS ===== -->
+    <section id="process" class="container section-padding" style="padding-top: 0;">
+        <h2 class="section-title scroll-slide slide-top">Our <span>Process</span></h2>
+        <p class="section-subtitle scroll-slide slide-bottom" style="transition-delay: 0.1s;">A seamless, transparent journey from initial consultation to final handover.</p>
+        <div class="process-grid">
+            <div class="process-step scroll-slide slide-left" style="transition-delay: 0.05s;">
+                <div class="step-num">01</div>
+                <h4>Initial Consultation</h4>
+                <p>Understanding your vision, requirements, and budget.</p>
+            </div>
+            <div class="process-step scroll-slide slide-top" style="transition-delay: 0.1s;">
+                <div class="step-num">02</div>
+                <h4>Site Visit &amp; Survey</h4>
+                <p>Detailed site analysis and feasibility study.</p>
+            </div>
+            <div class="process-step scroll-slide slide-right" style="transition-delay: 0.15s;">
+                <div class="step-num">03</div>
+                <h4>Design &amp; Planning</h4>
+                <p>Architectural design, 3D modeling, and structural planning.</p>
+            </div>
+            <div class="process-step scroll-slide slide-left" style="transition-delay: 0.2s;">
+                <div class="step-num">04</div>
+                <h4>Estimation &amp; Budgeting</h4>
+                <p>Detailed cost estimation and budget finalization.</p>
+            </div>
+            <div class="process-step scroll-slide slide-bottom" style="transition-delay: 0.25s;">
+                <div class="step-num">05</div>
+                <h4>Approval &amp; Permits</h4>
+                <p>Regulatory approvals and building permits.</p>
+            </div>
+            <div class="process-step scroll-slide slide-right" style="transition-delay: 0.3s;">
+                <div class="step-num">06</div>
+                <h4>Construction</h4>
+                <p>Quality construction with regular progress updates.</p>
+            </div>
+            <div class="process-step scroll-slide slide-left" style="transition-delay: 0.35s;">
+                <div class="step-num">07</div>
+                <h4>Quality Inspection</h4>
+                <p>Rigorous quality checks at every stage.</p>
+            </div>
+            <div class="process-step scroll-slide slide-top" style="transition-delay: 0.4s;">
+                <div class="step-num">08</div>
+                <h4>Handover &amp; Support</h4>
+                <p>Final handover with comprehensive after-sales support.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TESTIMONIALS ===== -->
+    <section class="container section-padding" style="padding-top: 0;">
+        <h2 class="section-title scroll-slide slide-right">What Our <span>Clients Say</span></h2>
+        <div class="testimonial-grid">
+            <div class="testimonial scroll-slide slide-left" style="transition-delay: 0.05s;">
+                <i class="fas fa-quote-left"></i>
+                <p>“Navi made the entire process stress‑free. Our new home is everything we dreamed of and more. The quality and attention to detail are exceptional.”</p>
+                <div class="author">
+                    <div class="author-avatar">RK</div>
+                    <div>Rajesh Kumar · Gurugram<br><span style="font-weight:400; color:#5f5a52; font-size:0.85rem;">Green Valley Farmhouse</span></div>
+                </div>
+            </div>
+            <div class="testimonial scroll-slide slide-bottom" style="transition-delay: 0.1s;">
+                <i class="fas fa-quote-left"></i>
+                <p>“The interior design team has an incredible eye for detail. Every corner of our home feels curated and thoughtfully designed. Highly recommended!”</p>
+                <div class="author">
+                    <div class="author-avatar">SM</div>
+                    <div>Sneha Mehta · Mumbai<br><span style="font-weight:400; color:#5f5a52; font-size:0.85rem;">Urban Loft Interior</span></div>
+                </div>
+            </div>
+            <div class="testimonial scroll-slide slide-right" style="transition-delay: 0.15s;">
+                <i class="fas fa-quote-left"></i>
+                <p>“Quality, transparency, and timely delivery — Navi exceeded our expectations. They completed our commercial project ahead of schedule.”</p>
+                <div class="author">
+                    <div class="author-avatar">AR</div>
+                    <div>Arjun Reddy · Bengaluru<br><span style="font-weight:400; color:#5f5a52; font-size:0.85rem;">Tech Park Complex</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CTA SECTION ===== -->
+    <section class="container">
+        <div class="cta-section scroll-slide slide-top">
+            <h2>Ready to build your <span>dream home</span>?</h2>
+            <div style="display: flex; flex-wrap: wrap; gap: 16px;">
+                <a href="#quote" class="btn-primary"><i class="fas fa-chevron-circle-right"></i> Get a Free Quote</a>
+                <a href="https://wa.me/919876543210" class="btn-whatsapp" style="background:#25D366; color:#fff; padding:14px 32px; border-radius:60px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:10px;"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CONTACT + QUOTE ===== -->
+    <section id="contact" class="container section-padding" style="padding-top: 0;">
+        <h2 class="section-title scroll-slide slide-left">Contact <span>Us</span></h2>
+        <p class="section-subtitle scroll-slide slide-right" style="transition-delay: 0.1s;">Get in touch with our team for a consultation or to discuss your project requirements.</p>
+
+        <div class="contact-grid">
+            <div class="scroll-slide slide-left">
+                <h3 style="font-size:1.6rem; margin-bottom:24px;">Get in Touch</h3>
+                <div class="contact-info-item">
+                    <i class="fas fa-map-pin"></i>
+                    <div><h4>Address</h4><p>45, Green Valley Estate, Sector 14, Gurugram, Haryana 122001</p></div>
+                </div>
+                <div class="contact-info-item">
+                    <i class="fas fa-phone"></i>
+                    <div><h4>Phone</h4><p><a href="tel:+919876543210" style="color:#1e1e1e; text-decoration:none;">+91 98765 43210</a></p></div>
+                </div>
+                <div class="contact-info-item">
+                    <i class="fab fa-whatsapp"></i>
+                    <div><h4>WhatsApp</h4><p><a href="https://wa.me/919876543210" style="color:#1e1e1e; text-decoration:none;">+91 98765 43210</a></p></div>
+                </div>
+                <div class="contact-info-item">
+                    <i class="fas fa-envelope"></i>
+                    <div><h4>Email</h4><p><a href="mailto:hello@naviengineers.in" style="color:#1e1e1e; text-decoration:none;">hello@naviengineers.in</a></p></div>
+                </div>
+                <div class="contact-info-item">
+                    <i class="fas fa-clock"></i>
+                    <div><h4>Business Hours</h4><p>Monday – Saturday: 9:00 AM – 7:00 PM<br>Sunday: Closed</p></div>
+                </div>
+                <div style="margin-top: 24px; display: flex; gap: 20px; font-size: 1.8rem; color:#e07c3c;">
+                    <a href="#" style="color:#e07c3c;"><i class="fab fa-facebook"></i></a>
+                    <a href="#" style="color:#e07c3c;"><i class="fab fa-instagram"></i></a>
+                    <a href="#" style="color:#e07c3c;"><i class="fab fa-youtube"></i></a>
+                    <a href="#" style="color:#e07c3c;"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <div class="scroll-slide slide-right">
+                <h3 style="font-size:1.4rem; margin-bottom:16px;">Send us a Message</h3>
+                <form class="contact-form">
+                    <div class="form-row">
+                        <input type="text" placeholder="Full Name *" required />
+                        <input type="email" placeholder="Email Address *" required />
+                    </div>
+                    <div class="form-row">
+                        <input type="tel" placeholder="Mobile Number *" required />
+                        <input type="text" placeholder="Location / City" />
+                    </div>
+                    <select>
+                        <option value="">Project Type</option>
+                        <option>Residential Construction</option>
+                        <option>Commercial Construction</option>
+                        <option>Interior Design</option>
+                        <option>Renovation</option>
+                        <option>Structural Engineering</option>
+                        <option>Other</option>
+                    </select>
+                    <textarea placeholder="Tell us about your project..." rows="4"></textarea>
+                    <button type="submit" class="btn-primary" style="width:100%; justify-content:center;"><i class="fas fa-paper-plane"></i> Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== QUOTE FORM ===== -->
+    <section id="quote" class="container section-padding" style="padding-top: 0;display:none;">
+        <h2 class="section-title scroll-slide slide-top">Request a <span>Quote</span></h2>
+        <p class="section-subtitle scroll-slide slide-bottom" style="transition-delay: 0.1s;">Fill out the form below and our team will get back to you within 24 hours with a detailed estimate.</p>
+
+        <div class="quote-form scroll-slide slide-bottom">
+            <form>
+                <div class="form-row">
+                    <input type="text" placeholder="Full Name *" required />
+                    <input type="tel" placeholder="Mobile Number *" required />
+                </div>
+                <div class="form-row">
+                    <input type="email" placeholder="Email Address" />
+                    <input type="text" placeholder="Location / City" />
+                </div>
+                <div class="form-row">
+                    <select required>
+                        <option value="">Project Type *</option>
+                        <option>Architectural Design</option>
+                        <option>Structural Engineering</option>
+                        <option>Residential Construction</option>
+                        <option>Commercial Construction</option>
+                        <option>Renovation / Remodeling</option>
+                        <option>Interior Design</option>
+                        <option>Project Management</option>
+                        <option>Quantity Surveying</option>
+                        <option>Approval / Permit Assistance</option>
+                        <option>Other</option>
+                    </select>
+                    <input type="text" placeholder="Approximate Budget (₹)" />
+                </div>
+                <div class="form-row">
+                    <input type="text" placeholder="Required Area (sq.ft)" />
+                    <input type="date" placeholder="Expected Start Date" />
+                </div>
+                <textarea placeholder="Project Description / Requirements *" rows="4" required></textarea>
+                <div class="file-upload">
+                    <i class="fas fa-cloud-upload-alt" style="font-size:2rem; color:#e07c3c; display:block; margin-bottom:8px;"></i>
+                    <p>Upload Plan / Document (Optional)</p>
+                    <p style="font-size:0.8rem; color:#999;">Drag &amp; drop or click to browse (PDF, DWG, JPG, PNG)</p>
+                    <input type="file" style="display:none;" />
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%; justify-content:center; margin-top:8px;"><i class="fas fa-file-signature"></i> Submit Quote Request</button>
+                <p style="text-align:center; font-size:0.85rem; color:#5f5a52; margin-top:12px;">We'll respond within 24 hours with a detailed estimate.</p>
+            </form>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="container footer">
+        <span>© 2026 Navi Engineers and Consultants — Built with Precision.</span>
+        <span><i class="fas fa-hard-hat" style="color:#e07c3c;"></i> Engineering &amp; Interior Specialists</span>
+    </footer>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script>
+        (function() {
+            // ----- HERO SLIDER -----
+            const track = document.getElementById('sliderTrack');
+            const dots = document.querySelectorAll('.dot');
+            const prevBtn = document.getElementById('prevSlide');
+            const nextBtn = document.getElementById('nextSlide');
+            let currentIndex = 0;
+            const totalSlides = 3;
+            let autoPlayInterval;
+
+            function goToSlide(index) {
+                if (index < 0) index = totalSlides - 1;
+                if (index >= totalSlides) index = 0;
+                currentIndex = index;
+                track.style.transform = `translateX(-${currentIndex * 100}%)`;
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === currentIndex);
+                });
+            }
+
+            function nextSlide() { goToSlide(currentIndex + 1); }
+
+            function prevSlide() { goToSlide(currentIndex - 1); }
+
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => { goToSlide(index);
+                    resetAutoPlay(); });
+            });
+
+            prevBtn.addEventListener('click', () => { prevSlide();
+                resetAutoPlay(); });
+            nextBtn.addEventListener('click', () => { nextSlide();
+                resetAutoPlay(); });
+
+            function startAutoPlay() { autoPlayInterval = setInterval(nextSlide, 5500); }
+
+            function resetAutoPlay() { clearInterval(autoPlayInterval);
+                startAutoPlay(); }
+
+            const slider = document.getElementById('heroSlider');
+            slider.addEventListener('mouseenter', () => { clearInterval(autoPlayInterval); });
+            slider.addEventListener('mouseleave', startAutoPlay);
+
+            goToSlide(0);
+            startAutoPlay();
+
+            // ----- MOBILE NAV TOGGLE -----
+            document.getElementById('navToggle').addEventListener('click', function() {
+                document.getElementById('navLinks').classList.toggle('open');
+            });
+
+            // ----- SCROLL ANIMATIONS -----
+            const slideElements = document.querySelectorAll('.scroll-slide');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.15,
+                rootMargin: '0px 0px -20px 0px'
+            });
+            slideElements.forEach(el => observer.observe(el));
+        })();
+    </script>
+</body>
+</html>
