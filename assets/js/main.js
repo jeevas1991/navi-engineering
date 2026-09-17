@@ -1,5 +1,6 @@
 /**
  * Navi Engineers and Consultants - Main JavaScript
+ * Brand theme: Navy (#0F2A5C) + Amber (#E8873A)
  * Handles hero slider, mobile navigation, and scroll animations
  */
 
@@ -70,7 +71,7 @@
         startAutoPlay();
     }
 
-    // ===== MOBILE NAV TOGGLE (handled by Bootstrap, but keeping for compatibility) =====
+    // ===== MOBILE NAV TOGGLE (fallback if Bootstrap collapse is bypassed) =====
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
 
@@ -98,29 +99,46 @@
         slideElements.forEach(el => observer.observe(el));
     }
 
-    // ===== NAVBAR SCROLL EFFECT =====
+    // ===== NAVBAR SCROLL EFFECT (Navy brand theme) =====
     const navbar = document.getElementById('mainNav');
     if (navbar) {
-        window.addEventListener('scroll', () => {
+        // Brand navy colors
+        const NAVY_DARK  = 'rgba(8, 26, 61, 0.98)';
+        const NAVY_MAIN  = 'rgba(15, 42, 92, 0.96)';
+
+        function updateNavbar() {
             if (window.scrollY > 50) {
-                navbar.style.background = 'rgba(20, 20, 20, 0.98)';
+                navbar.style.background = NAVY_DARK;
             } else {
-                navbar.style.background = 'rgba(30, 30, 30, 0.95)';
+                navbar.style.background = NAVY_MAIN;
             }
-        });
+        }
+
+        window.addEventListener('scroll', updateNavbar);
+        updateNavbar(); // set initial state on load
     }
 
     // ===== FILE UPLOAD PREVIEW =====
     const fileUpload = document.querySelector('.file-upload');
     if (fileUpload) {
         const fileInput = fileUpload.querySelector('input[type="file"]');
-        fileUpload.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', (e) => {
-            const fileName = e.target.files[0]?.name;
-            if (fileName) {
-                fileUpload.querySelector('p').textContent = `Selected: ${fileName}`;
-            }
-        });
+        if (fileInput) {
+            fileUpload.addEventListener('click', () => fileInput.click());
+
+            fileInput.addEventListener('change', (e) => {
+                const fileName = e.target.files[0]?.name;
+                if (fileName) {
+                    // Update the main label text without breaking icon markup
+                    const label = fileUpload.querySelector('.file-upload-label');
+                    if (label) {
+                        label.textContent = `Selected: ${fileName}`;
+                    } else {
+                        // Fallback for the old markup
+                        fileUpload.querySelector('p').textContent = `Selected: ${fileName}`;
+                    }
+                }
+            });
+        }
     }
 
     // ===== SMOOTH SCROLL FOR ANCHOR LINKS =====
@@ -128,10 +146,13 @@
         anchor.addEventListener('click', function(e) {
             const targetId = this.getAttribute('href');
             if (targetId === '#') return;
+
             const target = document.querySelector(targetId);
             if (target) {
                 e.preventDefault();
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                const offset = 80; // height of fixed navbar
+                const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                window.scrollTo({ top, behavior: 'smooth' });
             }
         });
     });
