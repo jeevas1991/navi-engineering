@@ -948,3 +948,60 @@ h1, h2, h3, h4, .heading-font {
         font-size: 10px;
     }
 }
+
+/* ===== MOBILE NAV FIXES ===== */
+
+/* Give collapsed menu its own solid background so links are visible immediately */
+@media (max-width: 991.98px) {
+    .navbar {
+        z-index: 1030; /* Bootstrap fixed-top default, ensure it's above hero */
+    }
+
+    .navbar-collapse {
+        background: var(--navy-dark);          /* solid navy panel */
+        margin-top: 12px;
+        padding: 16px 20px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+        /* Prevent clipping issues */
+        overflow: visible;
+        max-height: calc(100vh - 100px);
+        overflow-y: auto;
+    }
+
+    /* Remove the underline-border look on mobile, use left border instead */
+    .navbar-nav .nav-link {
+        padding: 12px 4px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+        border-left: 3px solid transparent;
+        transition: 0.2s;
+    }
+
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link.active {
+        border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+        border-left-color: var(--amber);
+        padding-left: 12px;
+        color: #fff !important;
+    }
+
+    /* CTA button inside collapsed menu should be full-width */
+    .navbar-nav .btn-nav-cta {
+        display: block;
+        text-align: center;
+        margin-top: 8px;
+        padding: 12px 24px;
+    }
+
+    /* Prevent backdrop-filter from creating stacking issues on iOS */
+    .navbar {
+        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: blur(8px);
+    }
+}
+
+/* Smooth slide-down animation for the collapsed menu */
+.navbar-collapse.collapsing {
+    transition: height 0.3s ease;
+}
