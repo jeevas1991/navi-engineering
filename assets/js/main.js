@@ -169,3 +169,162 @@
     });
 
 })();
+
+
+/* ========================================================
+   HERO SLIDER (video plays to completion, then advances)
+   ======================================================== */
+const track = document.getElementById('sliderTrack');
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.dot');
+const prevBtn = document.getElementById('prevSlide');
+const nextBtn = document.getElementById('nextSlide');
+const heroVideo = document.getElementById('heroVideo');
+const videoControl = document.getElementById('videoControl');
+
+if (track && slides.length > 0) {
+    let currentIndex = 0;
+    const totalSlides = slides.length;
+    let autoPlayTimer = null;
+    let videoEndedHandlerAttached = false;
+
+    /* ---------- helpers ---------- */
+    function isVideoSlide(index) {
+        return slides[index]?.classList.contains('slide-video');
+    }
+
+    function clearAutoPlay() {
+        if (autoPlayTimer) {
+            clearTimeout(autoPlayTimer);
+            clearInterval(autoPlayTimer);
+            autoPlayTimer = null;
+        }
+    }
+
+    function scheduleAutoAdvance(ms) {
+        clearAutoPlay();
+        autoPlayTimer = setTimeout(() => {
+            if (!isVideoSlide(currentIndex)) nextSlide();
+        }, ms);
+    }
+
+    /* ---------- video slide handling ---------- */
+    function onVideoEnded() {
+        // Video finished → advance to next slide
+        nextSlide();
+    }
+
+    function handleVideoSlide() {
+        if (!heroVideo) return;
+
+        // Reset video to start & play
+        try {
+            heroVideo.currentTime = 0;
+            const playPromise = heroVideo.play();
+            if (playPromise && typeof playPromise.catch === 'function') {
+                playPromise.catch(() => {
+                    // Autoplay blocked (rare with muted+playsinline) → fallback to 10s advance
+                    scheduleAutoAdvance(10000);
+                });
+            }
+        } catch (e) {
+            console.warn('Video play failed:', e);
+            scheduleAutoAdvance(10000);
+        }
+
+        // Update pause/play icon
+        if (videoControl) {
+            videoControl.querySelector('i').className = 'fas fa-pause';
+        }
+
+        // Attach 'ended' listener once
+        if (!videoEndedHandlerAttached) {
+            heroVideo.addEventListener('ended', onVideoEnded);
+            videoEndedHandlerAttached = true;
+        }
+
+        // Safety net: if 'ended' never fires (e.g. very long video), cap at 60s
+        clearAutoPlay();
+        autoPlayTimer = setTimeout(() => {
+            if (currentIndex === 0 && heroVideo && !heroVideo.paused) {
+                // still playing after 60s, let it continue — user controls
+            }
+        }, 60000);
+    }
+
+    function leaveVideoSlide() {
+        if (heroVideo) {
+            heroVideo.pause();
+        }
+    }
+
+    /* ---------- goToSlide ---------- */
+    function goToSlide(index) {
+        if (index < 0) index = totalSlides - 1;
+        if (index >= totalSlides) index = 0;
+
+        // If leaving the video slide, pause video
+        if (isVideoSlide(currentIndex) && index !== currentIndex) {
+            leaveVideoSlide();
+        }
+
+        currentIndex = index;
+        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === currentIndex));
+
+        if (isVideoSlide(currentIndex)) {
+            // Video slide: play video, NO auto-advance timer (waits for 'ended')
+            handleVideoSlide();
+        } else {
+            // Image slide: standard 5.5s auto-advance
+            scheduleAutoAdvance(5500);
+        }
+    }
+
+    function nextSlide() { goToSlide(currentIndex + 1); }
+    function prevSlide() { goToSlide(currentIndex - 1); }
+
+    /* ---------- dot & arrow handlers ---------- */
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => goToSlide(index));
+    });
+    if (prevBtn) prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
+    if (nextBtn) nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
+
+    /* ---------- pause on hover (desktop) ---------- */
+    const slider = document.getElementById('heroSlider');
+    if (slider) {
+        slider.addEventListener('mouseenter', () => {
+            // Do not pause video on hover — let it finish
+            if (!isVideoSlide(currentIndex)) clearAutoPlay();
+        });
+        slider.addEventListener('mouseleave', () => {
+            if (!isVideoSlide(currentIndex)) scheduleAutoAdvance(5500);
+        });
+    }
+
+    /* ---------- video play/pause button ---------- */
+    if (videoControl && heroVideo) {
+        videoControl.addEventListener('click', () => {
+            const icon = videoControl.querySelector('i');
+            if (heroVideo.paused) {
+                heroVideo.play();
+                icon.className = 'fas fa-pause';
+            } else {
+                heroVideo.pause();
+                icon.className = 'fas fa-play';
+            }
+        });
+    }
+
+    /* ---------- video load error fallback ---------- */
+    if (heroVideo) {
+        heroVideo.addEventListener('error', () => {
+            console.warn('Hero video failed to load — advancing to slide 2');
+            goToSlide(1);
+        });
+    }
+
+    /* ---------- init ---------- */
+    goToSlide(0);
+}
