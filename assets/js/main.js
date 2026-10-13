@@ -1,85 +1,236 @@
 /**
  * Navi Engineers and Consultants - Main JavaScript
  * Brand theme: Navy (#0F2A5C) + Amber (#E8873A)
- * Handles hero slider, mobile navigation, scroll animations
+ * Handles: hero slider (video + images), scroll animations,
+ *          mobile nav auto-close, file upload preview, smooth scroll
  */
 
-(function() {
+(function () {
     'use strict';
 
-    // ===== HERO SLIDER =====
+    /* ========================================================
+       HERO SLIDER (video plays to completion, then advances)
+       ======================================================== */
     const track = document.getElementById('sliderTrack');
+    const slides = document.querySelectorAll('.slide');
     const dots = document.querySelectorAll('.dot');
     const prevBtn = document.getElementById('prevSlide');
     const nextBtn = document.getElementById('nextSlide');
+    const heroVideo = document.getElementById('heroVideo');
+    const videoControl = document.getElementById('videoControl');
 
-    if (track && dots.length > 0) {
+    if (track && slides.length > 0) {
         let currentIndex = 0;
-        const totalSlides = dots.length;
-        let autoPlayInterval;
+        const totalSlides = slides.length;
 
+        // Timers
+        let imageTimer = null;
+        let videoSafetyTimer = null;
+
+        // Session guard — invalidates stale 'ended' handlers
+        let videoSession = 0;
+
+        /* ---------- helpers ---------- */
+        function isVideoSlide(index) {
+            const s = slides[index];
+            return !!(s && s.classList.contains('slide-video'));
+        }
+
+        function clearImageTimer() {
+            if (imageTimer) { clearTimeout(imageTimer); imageTimer = null; }
+        }
+
+        function clearVideoSafetyTimer() {
+            if (videoSafetyTimer) { clearTimeout(videoSafetyTimer); videoSafetyTimer = null; }
+        }
+
+        function clearAllTimers() {
+            clearImageTimer();
+            clearVideoSafetyTimer();
+        }
+
+        /* ---------- video slide ---------- */
+        function startVideoSlide() {
+            if (!heroVideo) {
+                imageTimer = setTimeout(function () { nextSlide(); }, 5500);
+                return;
+            }
+
+            videoSession++;
+            const mySession = videoSession;
+            clearAllTimers();
+
+            try {
+                heroVideo.pause();
+                heroVideo.currentTime = 0;
+            } catch (e) { /* ignore */ }
+
+            const playPromise = heroVideo.play();
+            if (playPromise && typeof playPromise.catch === 'function') {
+                playPromise.catch(function () {
+                    clearImageTimer();
+                    imageTimer = setTimeout(function () {
+                        if (currentIndex === 0) nextSlide();
+                    }, 10000);
+                });
+            }
+
+            if (videoControl) {
+                const icon = videoControl.querySelector('i');
+                if (icon) icon.className = 'fas fa-pause';
+            }
+
+            if (!heroVideo.dataset.endedAttached) {
+                heroVideo.addEventListener('ended', function () {
+                    if (isVideoSlide(currentIndex) && videoSession === mySession) {
+                        nextSlide();
+                    }
+                });
+                heroVideo.dataset.endedAttached = 'true';
+            }
+
+            clearVideoSafetyTimer();
+            videoSafetyTimer = setTimeout(function () {
+                if (currentIndex === 0 && heroVideo && !heroVideo.paused) {
+                    heroVideo.pause();
+                    nextSlide();
+                }
+            }, 60000);
+        }
+
+        function stopVideoSlide() {
+            if (!heroVideo) return;
+            videoSession++;
+            try {
+                heroVideo.pause();
+                heroVideo.currentTime = 0;
+            } catch (e) { /* ignore */ }
+            clearVideoSafetyTimer();
+        }
+
+        /* ---------- goToSlide ---------- */
         function goToSlide(index) {
             if (index < 0) index = totalSlides - 1;
             if (index >= totalSlides) index = 0;
+
+            const wasVideo = isVideoSlide(currentIndex);
+            const goingToVideo = isVideoSlide(index);
+
+            if (wasVideo && !goingToVideo) stopVideoSlide();
+
+            clearImageTimer();
+
             currentIndex = index;
-            track.style.transform = `translateX(-${currentIndex * 100}%)`;
-            dots.forEach((dot, i) => {
+            track.style.transform = 'translateX(-' + (currentIndex * 100) + '%)';
+
+            dots.forEach(function (dot, i) {
                 dot.classList.toggle('active', i === currentIndex);
             });
+
+            if (goingToVideo) {
+                startVideoSlide();
+            } else {
+                imageTimer = setTimeout(function () { nextSlide(); }, 5500);
+            }
         }
 
         function nextSlide() { goToSlide(currentIndex + 1); }
         function prevSlide() { goToSlide(currentIndex - 1); }
 
-        dots.forEach((dot, index) => {
-            dot.addEventListener('click', () => {
-                goToSlide(index);
-                resetAutoPlay();
+        /* ---------- dot & arrow handlers ---------- */
+        dots.forEach(function (dot) {
+            dot.addEventListener('click', function () {
+                const target = parseInt(dot.dataset.index, 10);
+                if (!isNaN(target)) goToSlide(target);
             });
         });
 
         if (prevBtn) {
-            prevBtn.addEventListener('click', () => { prevSlide(); resetAutoPlay(); });
+            prevBtn.addEventListener('click', function () {
+                goToSlide(currentIndex - 1);
+            });
         }
+
         if (nextBtn) {
-            nextBtn.addEventListener('click', () => { nextSlide(); resetAutoPlay(); });
+            nextBtn.addEventListener('click', function () {
+                goToSlide(currentIndex + 1);
+            });
         }
 
-        function startAutoPlay() {
-            autoPlayInterval = setInterval(nextSlide, 5500);
-        }
-        function resetAutoPlay() {
-            clearInterval(autoPlayInterval);
-            startAutoPlay();
-        }
-
+        /* ---------- hover pause (image slides only) ---------- */
         const slider = document.getElementById('heroSlider');
         if (slider) {
-            slider.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
-            slider.addEventListener('mouseleave', startAutoPlay);
+            slider.addEventListener('mouseenter', function () {
+                if (!isVideoSlide(currentIndex)) clearImageTimer();
+            });
+            slider.addEventListener('mouseleave', function () {
+                if (!isVideoSlide(currentIndex)) {
+                    clearImageTimer();
+                    imageTimer = setTimeout(function () { nextSlide(); }, 5500);
+                }
+            });
         }
 
+        /* ---------- video play/pause button ---------- */
+        if (videoControl && heroVideo) {
+            videoControl.addEventListener('click', function () {
+                const icon = videoControl.querySelector('i');
+                if (heroVideo.paused) {
+                    heroVideo.play();
+                    if (icon) icon.className = 'fas fa-pause';
+                    clearVideoSafetyTimer();
+                    videoSafetyTimer = setTimeout(function () {
+                        if (currentIndex === 0 && heroVideo && !heroVideo.paused) {
+                            heroVideo.pause();
+                            nextSlide();
+                        }
+                    }, 60000);
+                } else {
+                    heroVideo.pause();
+                    if (icon) icon.className = 'fas fa-play';
+                    clearVideoSafetyTimer();
+                }
+            });
+        }
+
+        /* ---------- video load error ---------- */
+        if (heroVideo) {
+            heroVideo.addEventListener('error', function () {
+                console.warn('Hero video failed to load — advancing to slide 2');
+                goToSlide(1);
+            });
+        }
+
+        /* ---------- init ---------- */
         goToSlide(0);
-        startAutoPlay();
     }
 
-    // ===== SCROLL ANIMATIONS (Intersection Observer) =====
+    /* ========================================================
+       SCROLL ANIMATIONS (optimized — no permanent will-change)
+       ======================================================== */
     const slideElements = document.querySelectorAll('.scroll-slide');
     if (slideElements.length > 0) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
+                    const el = entry.target;
+                    el.style.willChange = 'transform, opacity';
+                    el.classList.add('visible');
+                    setTimeout(function () {
+                        el.style.willChange = 'auto';
+                    }, 1100);
                 }
             });
         }, {
             threshold: 0.15,
             rootMargin: '0px 0px -20px 0px'
         });
-        slideElements.forEach(el => observer.observe(el));
+        slideElements.forEach(function (el) { observer.observe(el); });
     }
 
-    // ===== NAVBAR SCROLL EFFECT (Navy brand theme) =====
+    /* ========================================================
+       NAVBAR SCROLL EFFECT
+       ======================================================== */
     const navbar = document.getElementById('mainNav');
     if (navbar) {
         const NAVY_DARK = 'rgba(8, 26, 61, 0.98)';
@@ -96,235 +247,62 @@
         updateNavbar();
     }
 
-    // ===== MOBILE NAV: AUTO-CLOSE ON LINK CLICK =====
-    // Closes the Bootstrap collapse menu when a nav-link or the CTA is clicked
+    /* ========================================================
+       MOBILE NAV: auto-close on link click
+       ======================================================== */
     const navMenu = document.getElementById('navMenu');
-    if (navMenu) {
-        const navLinks = navMenu.querySelectorAll('.nav-link, .btn-nav-cta');
-        const collapseInstance = () => bootstrap.Collapse.getInstance(navMenu);
-
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                // Only act on mobile where the menu is collapsed
-                if (window.innerWidth < 992) {
+    if (navMenu && typeof bootstrap !== 'undefined') {
+        const links = navMenu.querySelectorAll('.nav-link, .btn-nav-cta');
+        links.forEach(function (link) {
+            link.addEventListener('click', function () {
+                if (window.innerWidth < 992 && navMenu.classList.contains('show')) {
                     const bsCollapse =
                         bootstrap.Collapse.getInstance(navMenu) ||
                         new bootstrap.Collapse(navMenu, { toggle: false });
-                    if (navMenu.classList.contains('show')) {
-                        bsCollapse.hide();
-                    }
+                    bsCollapse.hide();
                 }
             });
         });
     }
 
-    // ===== NAVBAR TOGGLER ICON ANIMATION =====
-    // Optional: swap ☰ icon to ✕ when menu is open
-    const navMenuEl = document.getElementById('navMenu');
-    const navbarToggler = document.querySelector('.navbar-toggler');
-    if (navMenuEl && navbarToggler) {
-        navMenuEl.addEventListener('show.bs.collapse', () => {
-            navbarToggler.setAttribute('aria-expanded', 'true');
-        });
-        navMenuEl.addEventListener('hide.bs.collapse', () => {
-            navbarToggler.setAttribute('aria-expanded', 'false');
-        });
-    }
-
-    // ===== FILE UPLOAD PREVIEW =====
+    /* ========================================================
+       FILE UPLOAD PREVIEW
+       ======================================================== */
     const fileUpload = document.querySelector('.file-upload');
     if (fileUpload) {
         const fileInput = fileUpload.querySelector('input[type="file"]');
         if (fileInput) {
-            fileUpload.addEventListener('click', () => fileInput.click());
-            fileInput.addEventListener('change', (e) => {
-                const fileName = e.target.files[0]?.name;
+            fileUpload.addEventListener('click', function () { fileInput.click(); });
+            fileInput.addEventListener('change', function (e) {
+                const fileName = e.target.files && e.target.files[0] ? e.target.files[0].name : '';
                 if (fileName) {
                     const label = fileUpload.querySelector('.file-upload-label');
                     if (label) {
-                        label.textContent = `Selected: ${fileName}`;
+                        label.textContent = 'Selected: ' + fileName;
                     } else {
                         const p = fileUpload.querySelector('p');
-                        if (p) p.textContent = `Selected: ${fileName}`;
+                        if (p) p.textContent = 'Selected: ' + fileName;
                     }
                 }
             });
         }
     }
 
-    // ===== SMOOTH SCROLL FOR ANCHOR LINKS =====
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
+    /* ========================================================
+       SMOOTH SCROLL FOR ANCHOR LINKS
+       ======================================================== */
+    document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+        anchor.addEventListener('click', function (e) {
             const targetId = this.getAttribute('href');
             if (targetId === '#') return;
-
             const target = document.querySelector(targetId);
             if (target) {
                 e.preventDefault();
                 const offset = 80;
                 const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
-                window.scrollTo({ top, behavior: 'smooth' });
+                window.scrollTo({ top: top, behavior: 'smooth' });
             }
         });
     });
 
 })();
-
-
-/* ========================================================
-   HERO SLIDER (video plays to completion, then advances)
-   ======================================================== */
-const track = document.getElementById('sliderTrack');
-const slides = document.querySelectorAll('.slide');
-const dots = document.querySelectorAll('.dot');
-const prevBtn = document.getElementById('prevSlide');
-const nextBtn = document.getElementById('nextSlide');
-const heroVideo = document.getElementById('heroVideo');
-const videoControl = document.getElementById('videoControl');
-
-if (track && slides.length > 0) {
-    let currentIndex = 0;
-    const totalSlides = slides.length;
-    let autoPlayTimer = null;
-    let videoEndedHandlerAttached = false;
-
-    /* ---------- helpers ---------- */
-    function isVideoSlide(index) {
-        return slides[index]?.classList.contains('slide-video');
-    }
-
-    function clearAutoPlay() {
-        if (autoPlayTimer) {
-            clearTimeout(autoPlayTimer);
-            clearInterval(autoPlayTimer);
-            autoPlayTimer = null;
-        }
-    }
-
-    function scheduleAutoAdvance(ms) {
-        clearAutoPlay();
-        autoPlayTimer = setTimeout(() => {
-            if (!isVideoSlide(currentIndex)) nextSlide();
-        }, ms);
-    }
-
-    /* ---------- video slide handling ---------- */
-    function onVideoEnded() {
-        // Video finished → advance to next slide
-        nextSlide();
-    }
-
-    function handleVideoSlide() {
-        if (!heroVideo) return;
-
-        // Reset video to start & play
-        try {
-            heroVideo.currentTime = 0;
-            const playPromise = heroVideo.play();
-            if (playPromise && typeof playPromise.catch === 'function') {
-                playPromise.catch(() => {
-                    // Autoplay blocked (rare with muted+playsinline) → fallback to 10s advance
-                    scheduleAutoAdvance(10000);
-                });
-            }
-        } catch (e) {
-            console.warn('Video play failed:', e);
-            scheduleAutoAdvance(10000);
-        }
-
-        // Update pause/play icon
-        if (videoControl) {
-            videoControl.querySelector('i').className = 'fas fa-pause';
-        }
-
-        // Attach 'ended' listener once
-        if (!videoEndedHandlerAttached) {
-            heroVideo.addEventListener('ended', onVideoEnded);
-            videoEndedHandlerAttached = true;
-        }
-
-        // Safety net: if 'ended' never fires (e.g. very long video), cap at 60s
-        clearAutoPlay();
-        autoPlayTimer = setTimeout(() => {
-            if (currentIndex === 0 && heroVideo && !heroVideo.paused) {
-                // still playing after 60s, let it continue — user controls
-            }
-        }, 60000);
-    }
-
-    function leaveVideoSlide() {
-        if (heroVideo) {
-            heroVideo.pause();
-        }
-    }
-
-    /* ---------- goToSlide ---------- */
-    function goToSlide(index) {
-        if (index < 0) index = totalSlides - 1;
-        if (index >= totalSlides) index = 0;
-
-        // If leaving the video slide, pause video
-        if (isVideoSlide(currentIndex) && index !== currentIndex) {
-            leaveVideoSlide();
-        }
-
-        currentIndex = index;
-        track.style.transform = `translateX(-${currentIndex * 100}%)`;
-        dots.forEach((dot, i) => dot.classList.toggle('active', i === currentIndex));
-
-        if (isVideoSlide(currentIndex)) {
-            // Video slide: play video, NO auto-advance timer (waits for 'ended')
-            handleVideoSlide();
-        } else {
-            // Image slide: standard 5.5s auto-advance
-            scheduleAutoAdvance(5500);
-        }
-    }
-
-    function nextSlide() { goToSlide(currentIndex + 1); }
-    function prevSlide() { goToSlide(currentIndex - 1); }
-
-    /* ---------- dot & arrow handlers ---------- */
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => goToSlide(index));
-    });
-    if (prevBtn) prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
-    if (nextBtn) nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
-
-    /* ---------- pause on hover (desktop) ---------- */
-    const slider = document.getElementById('heroSlider');
-    if (slider) {
-        slider.addEventListener('mouseenter', () => {
-            // Do not pause video on hover — let it finish
-            if (!isVideoSlide(currentIndex)) clearAutoPlay();
-        });
-        slider.addEventListener('mouseleave', () => {
-            if (!isVideoSlide(currentIndex)) scheduleAutoAdvance(5500);
-        });
-    }
-
-    /* ---------- video play/pause button ---------- */
-    if (videoControl && heroVideo) {
-        videoControl.addEventListener('click', () => {
-            const icon = videoControl.querySelector('i');
-            if (heroVideo.paused) {
-                heroVideo.play();
-                icon.className = 'fas fa-pause';
-            } else {
-                heroVideo.pause();
-                icon.className = 'fas fa-play';
-            }
-        });
-    }
-
-    /* ---------- video load error fallback ---------- */
-    if (heroVideo) {
-        heroVideo.addEventListener('error', () => {
-            console.warn('Hero video failed to load — advancing to slide 2');
-            goToSlide(1);
-        });
-    }
-
-    /* ---------- init ---------- */
-    goToSlide(0);
-}
